@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>轨道应急载荷隔离规程 · 并行状态图控制台</title>
+  <link rel="stylesheet" href="/styles.css" />
+</head>
+<body>
+  <header class="topbar">
+    <h1>轨道应急载荷隔离规程控制台</h1>
+    <div class="sub">并行状态图录入 · 切换前冲突确认 · 确定性回放（状态 ≤24，嵌套两层，并行区域 ≤4，外部事件 ≤32）</div>
+  </header>
+
+  <main class="layout">
+    <section class="panel" id="editor-panel">
+      <div class="panel-head">
+        <h2>规程录入</h2>
+        <div class="actions">
+          <button id="btn-load-default" type="button">载入验收规程</button>
+          <button id="btn-validate" type="button" class="secondary">仅校验</button>
+        </div>
+      </div>
+
+      <h3>根区域（1–4 个并行区域）</h3>
+      <table class="grid" id="root-regions-table">
+        <thead><tr><th>区域 ID</th><th>名称</th><th>初始状态 ID</th><th></th></tr></thead>
+        <tbody></tbody>
+      </table>
+      <button class="add-row" type="button" data-add="rootRegion">+ 根区域</button>
+
+      <h3>状态（至多 24 个，至多两层嵌套）</h3>
+      <table class="grid" id="states-table">
+        <thead>
+          <tr>
+            <th>ID</th><th>名称</th><th>类型</th><th>父状态(空=顶层)</th>
+            <th>所属区域 ID</th><th>初始子状态(复合必填)</th><th></th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+      <button class="add-row" type="button" data-add="state">+ 状态</button>
+
+      <details class="nested-help">
+        <summary>嵌套正交状态（复合状态内两层并行区域）</summary>
+        <p>类型选 <code>orthogonal</code> 后，在下方“嵌套区域”表声明 2–4 个子区域；其子状态的“父状态”填该正交状态，“所属区域”填子区域 ID。全部区域（根+嵌套）合计不超过 4 个。</p>
+        <table class="grid" id="nested-regions-table">
+          <thead><tr><th>容器(正交状态 ID)</th><th>区域 ID</th><th>名称</th><th>初始状态 ID</th><th></th></tr></thead>
+          <tbody></tbody>
+        </table>
+        <button class="add-row" type="button" data-add="nestedRegion">+ 嵌套区域</button>
+      </details>
+
+      <h3>外部事件（至多 32 个，文档顺序=到达顺序）</h3>
+      <div id="events-editor" class="chips-editor"></div>
+
+      <h3>迁移（触发事件 · 唯一优先级（小者优先）· 目标；源/目标留空表示根）</h3>
+      <table class="grid" id="transitions-table">
+        <thead>
+          <tr><th>ID</th><th>触发事件</th><th>优先级</th><th>源状态(空=根)</th><th>目标状态(空=根)</th><th></th></tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+      <button class="add-row" type="button" data-add="transition">+ 迁移</button>
+
+      <h3>回放事件序列</h3>
+      <div class="seq-row">
+        <input id="event-sequence" type="text" placeholder="例如 FIRE, RESET" spellcheck="false" />
+        <button id="btn-replay" type="button" class="primary">▶ 回放</button>
+      </div>
+    </section>
+
+    <section class="panel" id="result-panel">
+      <div class="panel-head"><h2>回放证据</h2><span id="verdict" class="verdict"></span></div>
+      <div id="errors" class="errors hidden"></div>
+      <div id="initial-config" class="initial-config"></div>
+      <div id="timeline" class="timeline"></div>
+    </section>
+  </main>
+
+  <script type="module" src="/app.js"></script>
+</body>
+</html>

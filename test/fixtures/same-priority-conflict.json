@@ -1,0 +1,14 @@
+{
+  "name": "同优先级冲突",
+  "regions": [{ "id": "R1", "name": "区域一", "initialStateId": "C" }],
+  "states": [
+    { "id": "C", "name": "外层复合", "parentId": null, "regionId": "R1", "kind": "composite", "initialChildId": "L" },
+    { "id": "L", "name": "叶", "parentId": "C", "regionId": "R1", "kind": "atomic" },
+    { "id": "X", "name": "旁路", "parentId": null, "regionId": "R1", "kind": "atomic" }
+  ],
+  "events": ["GO"],
+  "transitions": [
+    { "id": "tr_leaf", "event": "GO", "priority": 5, "sourceId": "L", "targetId": "X" },
+    { "id": "tr_ancestor_same", "event": "GO", "priority": 5, "sourceId": "C", "targetId": "X" }
+  ]
+}

@@ -1,0 +1,44 @@
+# 轨道应急载荷隔离规程控制台 — Compose 编排
+# web：浏览器页面（宿主端口可通过 HOST_PORT 配置，默认 8080）
+# verify：单次验收服务，依次执行引擎测试、页面构建、HTTP 冒烟，以退出码报告结果
+#
+# 用法：
+#   HOST_PORT=9090 docker compose up --build verify   # 单次验收（退出码即验收结果）
+#   HOST_PORT=9090 docker compose up --build web      # 启动页面
+services:
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: orbital-isolation-console:latest
+    environment:
+      PORT: "8080"
+      HOST: "0.0.0.0"
+    ports:
+      # 宿主端口可配置：HOST_PORT=9090
+      - "${HOST_PORT:-8080}:8080"
+    healthcheck:
+      test:
+        [
+          "CMD",
+          "node",
+          "-e",
+          "fetch('http://127.0.0.1:8080/healthz').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))"
+        ]
+      interval: 10s
+      timeout: 3s
+      retries: 5
+    restart: unless-stopped
+
+  verify:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: orbital-isolation-console:latest
+    command: ["sh", "-c", "npm test && node scripts/build.js && node scripts/smoke.js"]
+    environment:
+      PORT: "8080"
+      HOST: "127.0.0.1"
+    # 单次任务：完成后以退出码报告结果，不重启
+    restart: "no"
+    # verify 内部对构建中的镜像实际执行 HTTP 冒烟（spawn server.js 后请求）

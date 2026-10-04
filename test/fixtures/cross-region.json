@@ -1,0 +1,15 @@
+{
+  "name": "跨区域目标",
+  "regions": [
+    { "id": "RA", "name": "甲", "initialStateId": "A1" },
+    { "id": "RB", "name": "乙", "initialStateId": "B1" }
+  ],
+  "states": [
+    { "id": "A1", "name": "甲一", "parentId": null, "regionId": "RA", "kind": "atomic" },
+    { "id": "B1", "name": "乙一", "parentId": null, "regionId": "RB", "kind": "atomic" }
+  ],
+  "events": ["JUMP"],
+  "transitions": [
+    { "id": "tr_cross", "event": "JUMP", "priority": 1, "sourceId": "A1", "targetId": "B1" }
+  ]
+}
