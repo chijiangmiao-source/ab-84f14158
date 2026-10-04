@@ -1,0 +1,16 @@
+{
+  "files": [
+    "app.9326a2e2.js",
+    "example.bbbb8c94.js",
+    "index.html",
+    "statechart.e5d10980.js",
+    "styles.a9a34cd3.css"
+  ],
+  "sizes": {
+    "index.html": 2447,
+    "app.9326a2e2.js": 12410,
+    "styles.a9a34cd3.css": 4581,
+    "statechart.e5d10980.js": 20542,
+    "example.bbbb8c94.js": 1310
+  }
+}

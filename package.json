@@ -1,0 +1,13 @@
+{
+  "name": "orbit-isolation-statechart",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "轨道应急载荷隔离规程：并行状态图引擎 + 回放页面 + Compose 验收",
+  "scripts": {
+    "test": "node --test engine/statechart.test.mjs",
+    "build": "node web/build.mjs",
+    "start": "node server/server.mjs",
+    "verify": "node verify/verify.mjs"
+  }
+}

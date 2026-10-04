@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>轨道应急载荷隔离规程 · 并行状态图回放</title>
+<link rel="stylesheet" href="./styles.css">
+</head>
+<body>
+<header>
+  <h1>轨道应急载荷隔离规程</h1>
+  <p class="sub">并行状态图驱动的隔离规程录入与回放 · 限制：状态 ≤ 24 · 嵌套 ≤ 2 层 · 并行区域 ≤ 4 · 外部事件 ≤ 32</p>
+</header>
+
+<main id="app">
+  <section class="card">
+    <h2>① 状态 <span class="hint" id="state-count"></span></h2>
+    <table class="grid" id="states">
+      <thead>
+        <tr><th>id</th><th>名称</th><th>类型</th><th>父状态</th><th>初始子状态</th><th></th></tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+    <button type="button" id="add-state">＋ 添加状态</button>
+    <p class="hint">类型：leaf 叶 / composite 复合（须填初始子状态）/ parallel 并行（子状态即区域，须为复合状态）。父状态留空表示顶层状态。</p>
+  </section>
+
+  <section class="card">
+    <h2>② 迁移 <span class="hint" id="trans-count"></span></h2>
+    <table class="grid" id="transitions">
+      <thead>
+        <tr><th>id</th><th>源状态</th><th>目标状态</th><th>触发事件</th><th>优先级</th><th></th></tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+    <button type="button" id="add-trans">＋ 添加迁移</button>
+    <p class="hint">优先级为整数，同一源状态内必须唯一；不同源状态可相同（同优先级且退出集合相交将被拒绝）。</p>
+  </section>
+
+  <section class="card">
+    <h2>③ 外部事件与回放序列</h2>
+    <label class="row">事件目录（≤ 32，空格/逗号分隔）
+      <input id="events" type="text" placeholder="ISOLATE RESET">
+    </label>
+    <label class="row">回放序列（按序触发的外部事件）
+      <input id="sequence" type="text" placeholder="ISOLATE RESET">
+    </label>
+    <div class="actions">
+      <button type="button" id="load-example">载入示例</button>
+      <button type="button" id="validate">校验模型</button>
+      <button type="button" id="replay" class="primary">▶ 回放</button>
+      <button type="button" id="clear">清空结果</button>
+    </div>
+  </section>
+
+  <section id="output"></section>
+</main>
+
+<script type="module" src="./app.js"></script>
+</body>
+</html>
